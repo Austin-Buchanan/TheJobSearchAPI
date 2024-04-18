@@ -18,6 +18,28 @@ app = FastAPI()
 async def root():
     return {"message": "Hello World"}
 
+@app.get("/jobapps/")
+async def get_all_applications():
+    sqlSelect = "SELECT * FROM main_applications"
+    success, results = execute_SQL(sqlSelect)
+    if not success:
+        return {"error": results[0]}
+    else:
+        applications = []
+        for result in results:
+            application = {
+                "applicationId": result[0],
+                "employerName": result[1],
+                "jobName": result[2],
+                "location": result[3],
+                "appDate": result[4],
+                "status": result[5],
+                "updateLink": result[6],
+                "notes": result[7]
+            }
+            applications.append(application)
+        return {"applications": applications}
+
 @app.post("/jobapps/")
 async def add_job_application(jobApp: JobApp):
     appDate = ''
