@@ -27,17 +27,7 @@ async def get_all_applications():
     else:
         applications = []
         for result in results:
-            application = {
-                "applicationId": result[0],
-                "employerName": result[1],
-                "jobName": result[2],
-                "location": result[3],
-                "appDate": result[4],
-                "status": result[5],
-                "updateLink": result[6],
-                "notes": result[7]
-            }
-            applications.append(application)
+            applications.append(appFromRecord(result))
         return {"applications": applications}
 
 @app.post("/jobapps/")
@@ -74,6 +64,15 @@ async def add_job_application(jobApp: JobApp):
         return {"error": result[0]}
     else:
         return {"application_id": result[0]}
+    
+@app.get("/jobapps/{id}/")
+async def get_app_by_id(id: int):
+    sql = """SELECT * FROM main_applications WHERE application_id = {0}""".format(id)
+    success, result = execute_SQL(sql)
+    if not success:
+        return {"error": result[0]}
+    else:
+        return {"application": appFromRecord(result[0])}
 
 def execute_SQL(sql: str):
     config = load_config()
@@ -95,3 +94,16 @@ def execute_SQL(sql: str):
 
 def remove_apostrophes(inString):
     return inString.replace("'", "")
+
+def appFromRecord(record):
+    print(record)
+    return {
+        "applicationId": record[0],
+        "employerName": record[1],
+        "jobName": record[2],
+        "location": record[3],
+        "appDate": record[4],
+        "status": record[5],
+        "updateLink": record[6],
+        "notes": record[7]
+    }    
