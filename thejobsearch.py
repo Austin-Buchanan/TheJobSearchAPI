@@ -12,6 +12,15 @@ class JobApp(BaseModel):
     updateLink: str | None = None
     notes: str | None = None
 
+class JobAppUpdate(BaseModel):
+    employerName: str | None = None
+    jobName: str | None = None
+    location: str | None = None
+    appDate: str | None = None
+    status: str | None = None
+    updateLink: str | None = None
+    notes: str | None = None   
+
 app = FastAPI()
 
 @app.get("/")
@@ -73,6 +82,53 @@ async def get_app_by_id(id: int):
         return {"error": result[0]}
     else:
         return {"application": appFromRecord(result[0])}
+    
+@app.delete("/jobapps/{id}/")
+async def delete_app_by_id(id: int):
+    sql = """DELETE FROM main_applications WHERE application_id = {0}""".format(id)
+    success, result = execute_SQL(sql)
+    if not success:
+        return {"error": result[0]}
+    else:
+        return {"message": f"Application {id} deleted."}
+    
+@app.put("/jobapps/{id}/")
+async def update_app_by_id(id: int, appUpdate: JobAppUpdate):
+    updateDict = dict_from_JobAppUpdate(appUpdate)
+    updateKeys = list(updateDict.keys())
+    
+    sql = """UPDATE main_applications """
+    for i in range(len(updateKeys)):
+        if i == 0:
+            sql += """SET"""
+        sql += f""" {updateKeys[i]} = '{updateDict[updateKeys[i]]}'"""
+        if i < len(updateKeys) - 1:
+            sql += ""","""
+    sql += f""" WHERE application_id = {id}"""
+
+    success, result = execute_SQL(sql)
+    if not success: 
+        return {"error": result[0]}
+    else:
+        return {"message": f"Application {id} updated."}
+
+def dict_from_JobAppUpdate(appUpdate: JobAppUpdate):
+    updateDict = {}
+    if appUpdate.employerName is not None:
+        updateDict["employer_name"] = appUpdate.employerName
+    if appUpdate.jobName is not None:
+        updateDict["job_name"] = appUpdate.jobName
+    if appUpdate.location is not None:
+        updateDict["location"] = appUpdate.location
+    if appUpdate.appDate is not None:
+        updateDict["application_date"] = appUpdate.appDate
+    if appUpdate.status is not None:
+        updateDict["status"] = appUpdate.status
+    if appUpdate.updateLink is not None:
+        updateDict["link_for_updates"] = appUpdate.updateLink
+    if appUpdate.notes is not None:
+        updateDict["notes"] = appUpdate.notes
+    return updateDict
 
 def execute_SQL(sql: str):
     config = load_config()
