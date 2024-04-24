@@ -23,29 +23,29 @@ async def get_all_applications():
 @app.post("/jobapps/")
 async def add_job_application(jobApp: JobApp):
     appDate = ''
-    if jobApp.appDate is None or jobApp.appDate == '':
+    if jobApp.app_date is None or jobApp.app_date == '':
         appDate = 'CURRENT_DATE'
     else:
-        appDate = "'" + jobApp.appDate + "'"
+        appDate = "'" + jobApp.app_date + "'"
     sqlInsert = """
                 INSERT INTO main_applications (
                     "employer_name", 
                     "job_name", 
                     "location", 
-                    "application_date", 
+                    "app_date", 
                     "status", 
-                    "link_for_updates", 
+                    "update_link", 
                     "notes"
                 ) 
                 VALUES ('{0}', '{1}', '{2}', {3}, '{4}', '{5}', '{6}') 
-                RETURNING application_id;
+                RETURNING app_id;
                 """.format(
-                    u.remove_apostrophes(jobApp.employerName), 
-                    u.remove_apostrophes(jobApp.jobName),
+                    u.remove_apostrophes(jobApp.employer_name), 
+                    u.remove_apostrophes(jobApp.job_name),
                     u.remove_apostrophes(jobApp.location), 
                     appDate, 
                     u.remove_apostrophes(jobApp.status),
-                    jobApp.updateLink, 
+                    jobApp.update_link, 
                     u.remove_apostrophes(jobApp.notes)
                 )
     
@@ -53,11 +53,11 @@ async def add_job_application(jobApp: JobApp):
     if not success:
         return {"error": result[0]}
     else:
-        return {"application_id": result[0]}
+        return {"app_id": result[0]}
     
 @app.get("/jobapps/{id}/")
 async def get_app_by_id(id: int):
-    sql = """SELECT * FROM main_applications WHERE application_id = {0}""".format(id)
+    sql = """SELECT * FROM main_applications WHERE app_id = {0}""".format(id)
     success, result = u.execute_SQL(sql)
     if not success:
         return {"error": result[0]}
@@ -66,7 +66,7 @@ async def get_app_by_id(id: int):
     
 @app.delete("/jobapps/{id}/")
 async def delete_app_by_id(id: int):
-    sql = """DELETE FROM main_applications WHERE application_id = {0}""".format(id)
+    sql = """DELETE FROM main_applications WHERE app_id = {0}""".format(id)
     success, result = u.execute_SQL(sql)
     if not success:
         return {"error": result[0]}
@@ -85,7 +85,7 @@ async def update_app_by_id(id: int, appUpdate: JobAppUpdate):
         sql += f""" {updateKeys[i]} = '{updateDict[updateKeys[i]]}'"""
         if i < len(updateKeys) - 1:
             sql += ""","""
-    sql += f""" WHERE application_id = {id}"""
+    sql += f""" WHERE app_id = {id}"""
 
     success, result = u.execute_SQL(sql)
     if not success: 
@@ -108,26 +108,26 @@ async def get_all_safety_nets():
 @app.post("/safetynets/")
 async def add_safety_net_app(safetyNetApp: SafetyNetApp):
     appDate = ''
-    if safetyNetApp.appDate is None or safetyNetApp.appDate == '':
+    if safetyNetApp.app_date is None or safetyNetApp.app_date == '':
         appDate = 'CURRENT_DATE'
     else:
-        appDate = "'" + safetyNetApp.appDate + "'"
+        appDate = "'" + safetyNetApp.app_date + "'"
     sql = """
             INSERT INTO safety_nets (
                 "employer_name",
                 "job_name",
                 "shift_type",
                 "location",
-                "application_date",
+                "app_date",
                 "status",
-                "link_for_updates",
+                "update_link",
                 "notes"
             ) VALUES ('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}', '{7}')
-            RETURNING application_id;
+            RETURNING app_id;
           """.format(
-              u.remove_apostrophes(safetyNetApp.employerName),
-              u.remove_apostrophes(safetyNetApp.jobName),
-              u.remove_apostrophes(safetyNetApp.shiftType),
+              u.remove_apostrophes(safetyNetApp.employer_name),
+              u.remove_apostrophes(safetyNetApp.job_name),
+              u.remove_apostrophes(safetyNetApp.shift_type),
               u.remove_apostrophes(safetyNetApp.location),
               appDate,
               u.remove_apostrophes(safetyNetApp.status),

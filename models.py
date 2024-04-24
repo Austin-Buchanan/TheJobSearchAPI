@@ -1,22 +1,22 @@
 from pydantic import BaseModel
 
 class JobApp(BaseModel):
-    employerName: str
-    jobName: str
+    employer_name: str
+    job_name: str
     location: str
-    appDate: str | None = None
+    app_date: str | None = None
     status: str | None = None
-    updateLink: str | None = None
+    update_link: str | None = None
     notes: str | None = None
 
 class JobAppUpdate(BaseModel):
-    employerName: str | None = None
-    jobName: str | None = None
+    employer_name: str | None = None
+    job_name: str | None = None
     location: str | None = None
-    appDate: str | None = None
+    app_date: str | None = None
     status: str | None = None
-    updateLink: str | None = None
+    update_link: str | None = None
     notes: str | None = None  
 
 class SafetyNetApp(JobApp):
-    shiftType: str 
+    shift_type: str 

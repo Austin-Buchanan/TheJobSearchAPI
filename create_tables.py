@@ -6,37 +6,36 @@ def create_tables():
     commands = (
         """
         CREATE TABLE main_applications (
-            application_id SERIAL PRIMARY KEY, 
+            app_id SERIAL PRIMARY KEY, 
             employer_name VARCHAR(255) NOT NULL,
             job_name VARCHAR(255) NOT NULL,
             location VARCHAR(255) NOT NULL,
-            application_date DATE,
+            app_date DATE,
             status VARCHAR(255),
-            link_for_updates TEXT, 
+            update_link TEXT, 
             notes TEXT
-        )
+        );
+        """,
+        """
+        CREATE UNIQUE INDEX main_app_index
+        ON main_applications (employer_name, job_name, location, app_date);
         """,
         """
         CREATE TABLE safety_nets (
-            application_id SERIAL PRIMARY KEY,
+            app_id SERIAL PRIMARY KEY,
             employer_name VARCHAR(255) NOT NULL,
             job_name VARCHAR(255) NOT NULL,
             shift_type VARCHAR(255) NOT NULL,
             location VARCHAR(255) NOT NULL,
-            application_date DATE,
+            app_date DATE,
             status VARCHAR(255),
-            link_for_updates TEXT,
+            update_link TEXT,
             notes TEXT
         )
         """,
         """
-        CREATE TABLE employer_search (
-            employer_id SERIAL PRIMARY KEY,
-            employer_name VARCHAR(255) NOT NULL,
-            date_searched DATE,
-            has_openings VARCHAR(127),
-            page_link TEXT
-        )
+        CREATE UNIQUE INDEX safety_net_index
+        ON safety_nets (employer_name, job_name, shift_type, location, app_date);
         """
     )
 

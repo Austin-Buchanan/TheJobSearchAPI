@@ -4,18 +4,18 @@ from models import JobAppUpdate
 
 def dict_from_JobAppUpdate(appUpdate: JobAppUpdate):
     updateDict = {}
-    if appUpdate.employerName is not None:
-        updateDict["employer_name"] = appUpdate.employerName
+    if appUpdate.employer_name is not None:
+        updateDict["employer_name"] = appUpdate.employer_name
     if appUpdate.jobName is not None:
-        updateDict["job_name"] = appUpdate.jobName
+        updateDict["job_name"] = appUpdate.job_name
     if appUpdate.location is not None:
         updateDict["location"] = appUpdate.location
     if appUpdate.appDate is not None:
-        updateDict["application_date"] = appUpdate.appDate
+        updateDict["app_date"] = appUpdate.app_date
     if appUpdate.status is not None:
         updateDict["status"] = appUpdate.status
-    if appUpdate.updateLink is not None:
-        updateDict["link_for_updates"] = appUpdate.updateLink
+    if appUpdate.update_link is not None:
+        updateDict["update_link"] = appUpdate.update_link
     if appUpdate.notes is not None:
         updateDict["notes"] = appUpdate.notes
     return updateDict
@@ -43,25 +43,25 @@ def remove_apostrophes(inString):
 
 def appFromRecord(record):
     return {
-        "applicationId": record[0],
-        "employerName": record[1],
-        "jobName": record[2],
+        "app_id": record[0],
+        "employer_name": record[1],
+        "job_name": record[2],
         "location": record[3],
-        "appDate": record[4],
+        "app_date": record[4],
         "status": record[5],
-        "updateLink": record[6],
+        "update_link": record[6],
         "notes": record[7]
     }
 
 def safetyNetFromRecord(record):
     return {
-        "applicationId": record[0],
-        "employerName": record[1],
-        "jobName": record[2],
-        "shiftType": record[3],
+        "app_id": record[0],
+        "employer_name": record[1],
+        "job_name": record[2],
+        "shift_type": record[3],
         "location": record[4],
-        "appDate": record[5],
+        "app_date": record[5],
         "status": record[6],
-        "updateLink": record[7],
+        "update_link": record[7],
         "notes": record[8]
     }
