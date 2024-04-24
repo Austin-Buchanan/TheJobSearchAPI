@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from models import JobApp, JobAppUpdate, SafetyNetApp
+from models import JobApp, JobAppUpdate, SafetyNetApp, SafetyNetUpdate
 import utilities as u
 
 app = FastAPI()
@@ -131,11 +131,21 @@ async def add_safety_net_app(safetyNetApp: SafetyNetApp):
               u.remove_apostrophes(safetyNetApp.location),
               appDate,
               u.remove_apostrophes(safetyNetApp.status),
-              safetyNetApp.updateLink,
+              safetyNetApp.update_link,
               u.remove_apostrophes(safetyNetApp.notes)
           )
     success, result = u.execute_SQL(sql)
     if not success:
         return {"error": result[0]}
     else:
-        return {"application_id": result[0]}           
+        return {"application_id": result[0]}    
+
+@app.put("/safetynets/{id}/")
+async def update_safety_net_by_id(id: int, sNetUpdate: SafetyNetUpdate):
+    updateDict = u.dict_from_SafetyNetUpdate(sNetUpdate)
+    sql = u.getUpdateFromDict(updateDict, "safety_nets", id)
+    success, result = u.execute_SQL(sql)
+    if not success:
+        return {"error": result[0]}
+    else:
+        return {"message": f"Application {id} updated."}       

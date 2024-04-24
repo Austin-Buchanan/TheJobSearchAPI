@@ -1,6 +1,6 @@
 import psycopg2
 from config import load_config
-from models import JobAppUpdate
+from models import JobAppUpdate, SafetyNetUpdate
 
 def dict_from_JobAppUpdate(appUpdate: JobAppUpdate):
     updateDict = {}
@@ -19,6 +19,27 @@ def dict_from_JobAppUpdate(appUpdate: JobAppUpdate):
     if appUpdate.notes is not None:
         updateDict["notes"] = appUpdate.notes
     return updateDict
+
+def dict_from_SafetyNetUpdate(sNetUpdate: SafetyNetUpdate):
+    updateDict = {}
+    if sNetUpdate.employer_name is not None:
+        updateDict["employer_name"] = sNetUpdate.employer_name
+    if sNetUpdate.job_name is not None:
+        updateDict["job_name"] = sNetUpdate.job_name
+    if sNetUpdate.shift_type is not None:
+        updateDict["shift_type"] = sNetUpdate.shift_type
+    if sNetUpdate.location is not None:
+        updateDict["location"] = sNetUpdate.location
+    if sNetUpdate.app_date is not None:
+        updateDict["app_date"] = sNetUpdate.app_date
+    if sNetUpdate.status is not None:
+        updateDict["status"] = sNetUpdate.status
+    if sNetUpdate.update_link is not None:
+        updateDict["update_link"] = sNetUpdate.update_link
+    if sNetUpdate.notes is not None:
+        updateDict["notes"] = sNetUpdate.notes
+    return updateDict
+
 
 def execute_SQL(sql: str):
     config = load_config()
@@ -65,3 +86,15 @@ def safetyNetFromRecord(record):
         "update_link": record[7],
         "notes": record[8]
     }
+
+def getUpdateFromDict(updateDict: dict[str], tableName: str, id: int):
+    updateKeys = list(updateDict.keys())
+    sql = f"""UPDATE {tableName} """
+    for i in range(len(updateKeys)):
+        if i == 0:
+            sql += """SET"""
+        sql += f""" {updateKeys[i]} = '{updateDict[updateKeys[i]]}'"""
+        if i < len(updateKeys) - 1:
+            sql += ""","""
+    sql += f""" WHERE app_id = {id}"""
+    return sql
