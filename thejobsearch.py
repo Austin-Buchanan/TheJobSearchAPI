@@ -76,17 +76,7 @@ async def delete_app_by_id(id: int):
 @app.put("/jobapps/{id}/")
 async def update_app_by_id(id: int, appUpdate: JobAppUpdate):
     updateDict = u.dict_from_JobAppUpdate(appUpdate)
-    updateKeys = list(updateDict.keys())
-    
-    sql = """UPDATE main_applications """
-    for i in range(len(updateKeys)):
-        if i == 0:
-            sql += """SET"""
-        sql += f""" {updateKeys[i]} = '{updateDict[updateKeys[i]]}'"""
-        if i < len(updateKeys) - 1:
-            sql += ""","""
-    sql += f""" WHERE app_id = {id}"""
-
+    sql = u.getUpdateFromDict(updateDict, "main_applications", id)
     success, result = u.execute_SQL(sql)
     if not success: 
         return {"error": result[0]}

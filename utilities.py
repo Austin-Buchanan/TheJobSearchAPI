@@ -6,11 +6,11 @@ def dict_from_JobAppUpdate(appUpdate: JobAppUpdate):
     updateDict = {}
     if appUpdate.employer_name is not None:
         updateDict["employer_name"] = appUpdate.employer_name
-    if appUpdate.jobName is not None:
+    if appUpdate.job_name is not None:
         updateDict["job_name"] = appUpdate.job_name
     if appUpdate.location is not None:
         updateDict["location"] = appUpdate.location
-    if appUpdate.appDate is not None:
+    if appUpdate.app_date is not None:
         updateDict["app_date"] = appUpdate.app_date
     if appUpdate.status is not None:
         updateDict["status"] = appUpdate.status
