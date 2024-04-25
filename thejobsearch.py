@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
+from typing import Annotated
 from models import JobApp, JobAppUpdate, SafetyNetApp, SafetyNetUpdate
 import utilities as u
 
@@ -9,9 +10,36 @@ async def root():
     return {"message": "Hello World"}
 
 @app.get("/jobapps/")
-async def get_all_applications():
-    sqlSelect = "SELECT * FROM main_applications"
-    success, results = u.execute_SQL(sqlSelect)
+async def get_all_applications(
+    employer_name: str | None = None,
+    job_name: str | None = None,
+    location: str | None = None,
+    status: str | None = None 
+):
+    sql = "SELECT * FROM main_applications"
+    if employer_name or job_name or location or status:
+        sql += " WHERE "
+    paramCounter = 0
+    if employer_name:
+        sql += "employer_name = '" + employer_name.replace('_', '') + "'"
+        paramCounter += 1
+    if job_name:
+        if paramCounter != 0:
+            sql += " and "
+        sql += "job_name = '" + job_name.replace('_', '') + "'"
+        paramCounter += 1
+    if location:
+        if paramCounter != 0:
+            sql += " and "
+        sql += "location = '" + location.replace('_', '') + "'"
+        paramCounter += 1
+    if status:
+        if paramCounter != 0:
+            sql += " and "
+        sql += "status = '" + status.replace('_', '') + "'"
+    sql += ';'
+
+    success, results = u.execute_SQL(sql)
     if not success:
         return {"error": results[0]}
     else:
