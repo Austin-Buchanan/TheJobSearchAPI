@@ -111,7 +111,7 @@ async def update_app_by_id(id: int, appUpdate: JobAppUpdate):
     else:
         return {"message": f"Application {id} updated."}
     
-@app.get("/jobapps/employers/")
+@app.get("/employers/")
 async def get_employer_names():
     sql = "SELECT DISTINCT employer_name FROM main_applications;"
     success, results = u.execute_SQL(sql)
@@ -120,7 +120,7 @@ async def get_employer_names():
     else:
         return {"employer_names": results}
 
-@app.get("/jobapps/jobnames/")
+@app.get("/jobnames/")
 async def get_job_names():
     sql = "SELECT DISTINCT job_name FROM main_applications;"
     success, results = u.execute_SQL(sql)
@@ -129,7 +129,7 @@ async def get_job_names():
     else:
         return {"job_names": results}
 
-@app.get("/jobapps/locations/")
+@app.get("/locations/")
 async def get_locations():
     sql = "SELECT DISTINCT location FROM main_applications;"
     success, results = u.execute_SQL(sql)
@@ -138,7 +138,7 @@ async def get_locations():
     else:
         return {"locations": results}
 
-@app.get("/jobapps/statuses/")
+@app.get("/statuses/")
 async def get_statuses():
     sql = "SELECT DISTINCT status FROM main_applications;"
     success, results = u.execute_SQL(sql)
