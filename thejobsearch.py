@@ -11,10 +11,10 @@ async def root():
 
 @app.get("/jobapps/")
 async def get_all_applications(
-    employer_name: str | None = None,
-    job_name: str | None = None,
-    location: str | None = None,
-    status: str | None = None 
+    employer_name: Annotated[str | None, Query(max_length=256)] = None,
+    job_name: Annotated[str | None, Query(max_length=256)] = None,
+    location: Annotated[str | None, Query(max_length=256)] = None,
+    status: Annotated[str | None, Query(max_length=256)] = None 
 ):
     sql = "SELECT * FROM main_applications"
     if employer_name or job_name or location or status:
