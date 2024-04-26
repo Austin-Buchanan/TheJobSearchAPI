@@ -110,6 +110,42 @@ async def update_app_by_id(id: int, appUpdate: JobAppUpdate):
         return {"error": result[0]}
     else:
         return {"message": f"Application {id} updated."}
+    
+@app.get("/jobapps/employers/")
+async def get_employer_names():
+    sql = "SELECT DISTINCT employer_name FROM main_applications;"
+    success, results = u.execute_SQL(sql)
+    if not success:
+        return {"error": results[0]}
+    else:
+        return {"employer_names": results}
+
+@app.get("/jobapps/jobnames/")
+async def get_job_names():
+    sql = "SELECT DISTINCT job_name FROM main_applications;"
+    success, results = u.execute_SQL(sql)
+    if not success:
+        return {"error": results[0]}
+    else:
+        return {"job_names": results}
+
+@app.get("/jobapps/locations/")
+async def get_locations():
+    sql = "SELECT DISTINCT location FROM main_applications;"
+    success, results = u.execute_SQL(sql)
+    if not success:
+        return {"error": results[0]}
+    else:
+        return {"locations": results}
+
+@app.get("/jobapps/statuses/")
+async def get_statuses():
+    sql = "SELECT DISTINCT status FROM main_applications;"
+    success, results = u.execute_SQL(sql)
+    if not success:
+        return {"error": results[0]}
+    else:
+        return {"statuses": results}
 
 @app.get("/safetynets/")
 async def get_all_safety_nets():
