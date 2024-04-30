@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Path
 from typing import Annotated
 from models import JobApp, JobAppUpdate, SafetyNetApp, SafetyNetUpdate
 import utilities as u
@@ -84,7 +84,7 @@ async def add_job_application(jobApp: JobApp):
         return {"app_id": result[0]}
     
 @app.get("/jobapps/{id}/")
-async def get_app_by_id(id: int):
+async def get_app_by_id(id: Annotated[int, Path(gt=0)]):
     sql = """SELECT * FROM main_applications WHERE app_id = {0}""".format(id)
     success, result = u.execute_SQL(sql)
     if not success:
@@ -93,7 +93,7 @@ async def get_app_by_id(id: int):
         return {"application": u.appFromRecord(result[0])}
     
 @app.delete("/jobapps/{id}/")
-async def delete_app_by_id(id: int):
+async def delete_app_by_id(id: Annotated[int, Path(gt=0)]):
     sql = """DELETE FROM main_applications WHERE app_id = {0}""".format(id)
     success, result = u.execute_SQL(sql)
     if not success:
@@ -102,7 +102,10 @@ async def delete_app_by_id(id: int):
         return {"message": f"Application {id} deleted."}
     
 @app.put("/jobapps/{id}/")
-async def update_app_by_id(id: int, appUpdate: JobAppUpdate):
+async def update_app_by_id(
+    id: Annotated[int, Path(gt=0)], 
+    appUpdate: JobAppUpdate
+):
     updateDict = u.dict_from_JobAppUpdate(appUpdate)
     sql = u.getUpdateFromDict(updateDict, "main_applications", id)
     success, result = u.execute_SQL(sql)
@@ -195,7 +198,10 @@ async def add_safety_net_app(safetyNetApp: SafetyNetApp):
         return {"application_id": result[0]}    
 
 @app.put("/safetynets/{id}/")
-async def update_safety_net_by_id(id: int, sNetUpdate: SafetyNetUpdate):
+async def update_safety_net_by_id(
+    id: Annotated[int, Path(gt=0)], 
+    sNetUpdate: SafetyNetUpdate
+):
     updateDict = u.dict_from_SafetyNetUpdate(sNetUpdate)
     sql = u.getUpdateFromDict(updateDict, "safety_nets", id)
     success, result = u.execute_SQL(sql)
