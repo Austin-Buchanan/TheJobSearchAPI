@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query, Path
+from fastapi import FastAPI, Query, Path, Body
 from typing import Annotated
 from models import JobApp, JobAppUpdate, SafetyNetApp, SafetyNetUpdate
 import utilities as u
@@ -49,7 +49,24 @@ async def get_all_applications(
         return {"applications": applications}
 
 @app.post("/jobapps/")
-async def add_job_application(jobApp: JobApp):
+async def add_job_application(
+    jobApp: Annotated[
+        JobApp,
+        Body(
+            examples=[
+                {
+                    "employer_name": "AustinCodesOnline Inc.",
+                    "job_name": "Software Engineer",
+                    "location": "Remote",
+                    "app_date": "2024-05-01",
+                    "status": "Scheduling second interview",
+                    "update_link": "http://austincodes.online/careers/this_does_not_exist/",
+                    "notes": "Requires 2 cups of coffee per day"                    
+                }
+            ]
+        )
+    ]
+):
     appDate = ''
     if jobApp.app_date is None or jobApp.app_date == '':
         appDate = 'CURRENT_DATE'

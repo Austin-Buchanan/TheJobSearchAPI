@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, HttpUrl
 
 class JobApp(BaseModel):
     employer_name: str = Field(max_length=256)
@@ -13,7 +13,7 @@ class JobApp(BaseModel):
         default=None,
         max_length=256 
     )
-    update_link: str | None = None
+    update_link: HttpUrl | None = None
     notes: str | None = None
 
 class JobAppUpdate(BaseModel):
@@ -29,7 +29,7 @@ class JobAppUpdate(BaseModel):
         default=None,
         max_length=256 
     )
-    update_link: str | None = None
+    update_link: HttpUrl | None = None
     notes: str | None = None
 
 class SafetyNetApp(JobApp):
@@ -49,5 +49,5 @@ class SafetyNetUpdate(BaseModel):
         default=None,
         max_length=256 
     )
-    update_link: str | None = None
+    update_link: HttpUrl | None = None
     notes: str | None = None
