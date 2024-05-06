@@ -14,7 +14,7 @@ def create_tables():
             status VARCHAR(255),
             update_link TEXT, 
             notes TEXT,
-            insert_ts TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            maint_ts TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         );
         """,
         """
@@ -32,7 +32,7 @@ def create_tables():
             status VARCHAR(255),
             update_link TEXT,
             notes TEXT,
-            insert_ts TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            maint_ts TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         )
         """,
         """

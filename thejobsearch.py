@@ -46,7 +46,7 @@ async def get_all_applications(
         applications = []
         for result in results:
             applications.append(u.appFromRecord(result))
-        return {"applications": applications}
+        return {"data": applications}
 
 @app.post("/jobapps/")
 async def add_job_application(
@@ -107,7 +107,7 @@ async def get_app_by_id(id: Annotated[int, Path(gt=0)]):
     if not success:
         return {"error": result[0]}
     else:
-        return {"application": u.appFromRecord(result[0])}
+        return {"data": u.appFromRecord(result[0])}
     
 @app.delete("/jobapps/{id}/")
 async def delete_app_by_id(id: Annotated[int, Path(gt=0)]):
@@ -129,7 +129,7 @@ async def update_app_by_id(
     if not success: 
         return {"error": result[0]}
     else:
-        return {"message": f"Application {id} updated."}
+        return {"data": u.appFromRecord(result)}
     
 @app.get("/employers/")
 async def get_employer_names():
@@ -138,7 +138,7 @@ async def get_employer_names():
     if not success:
         return {"error": results[0]}
     else:
-        return {"employer_names": results}
+        return {"data": results}
 
 @app.get("/jobnames/")
 async def get_job_names():
@@ -147,7 +147,7 @@ async def get_job_names():
     if not success:
         return {"error": results[0]}
     else:
-        return {"job_names": results}
+        return {"data": results}
 
 @app.get("/locations/")
 async def get_locations():
@@ -156,7 +156,7 @@ async def get_locations():
     if not success:
         return {"error": results[0]}
     else:
-        return {"locations": results}
+        return {"data": results}
 
 @app.get("/statuses/")
 async def get_statuses():
@@ -165,7 +165,7 @@ async def get_statuses():
     if not success:
         return {"error": results[0]}
     else:
-        return {"statuses": results}
+        return {"data": results}
 
 @app.get("/safetynets/")
 async def get_all_safety_nets():
@@ -177,7 +177,7 @@ async def get_all_safety_nets():
         applications = []
         for result in results:
             applications.append(u.safetyNetFromRecord(result))
-        return {"applications": applications}     
+        return {"data": applications}     
 
 @app.post("/safetynets/")
 async def add_safety_net_app(safetyNetApp: SafetyNetApp):
@@ -225,4 +225,4 @@ async def update_safety_net_by_id(
     if not success:
         return {"error": result[0]}
     else:
-        return {"message": f"Application {id} updated."}       
+        return {"data": u.safetyNetFromRecord(result)}       

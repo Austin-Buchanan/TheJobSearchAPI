@@ -93,8 +93,6 @@ def getUpdateFromDict(updateDict: dict[str], tableName: str, id: int):
     for i in range(len(updateKeys)):
         if i == 0:
             sql += """SET"""
-        sql += f""" {updateKeys[i]} = '{updateDict[updateKeys[i]]}'"""
-        if i < len(updateKeys) - 1:
-            sql += ""","""
-    sql += f""" WHERE app_id = {id}"""
+        sql += f""" {updateKeys[i]} = '{updateDict[updateKeys[i]]}',"""
+    sql += f""" maint_ts = CURRENT_TIMESTAMP WHERE app_id = {id} RETURNING *"""
     return sql
